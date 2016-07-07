@@ -1,5 +1,6 @@
 import sqlite3
 import sys
+import argparse
 
 
 def create_tables(database):
@@ -30,9 +31,9 @@ def clean_up_before_processing(cursor):
     cursor.execute("DELETE FROM AccessEvents")
     cursor.execute("DELETE FROM UnknownEvents")
 
-def file_processor(cursor):
+def file_processor(cursor, file_name):
     print("Processing log file")
-    with open('log', 'r') as log_file: 
+    with open(file_name, 'r') as log_file: 
         for line in log_file:
             list_from_line = line.split()
             if len(list_from_line) == 7:
@@ -56,11 +57,18 @@ def main():
         print("This program runs in Python 3 or higher")
         sys.exit(1)
 
-    log_database = sqlite3.connect('log.db')
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-f", "--file", default='log',
+                        help="name of the log file to process")
+    args = parser.parse_args()
+    file_name = args.file
+    database_name = file_name + ".db"
+
+    log_database = sqlite3.connect(database_name)
     log_cursor = log_database.cursor()
     create_tables(log_database)
     clean_up_before_processing(log_cursor)
-    file_processor(log_cursor)
+    file_processor(log_cursor, file_name)
     count_critical_CVEs(log_cursor)
     log_database.commit()
     log_database.close()
