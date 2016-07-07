@@ -21,3 +21,7 @@ Please send to us:
 2016-05-27 22:01:46.403912 high 7564 host778.example.com TCP CVE-2015-6778
 2016-05-27 22:08:20.403929 high 9081 247.134.158.200 79.87.184.11 bryan
 ```
+
+## Answers ##
+
+Total number of critical CVEs: 133
